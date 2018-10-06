@@ -1,0 +1,39 @@
+---
+- hosts: webservers
+  tasks: 
+   - name: ping for checking alive
+     ping:
+   - name: apt-get update
+     become: true
+     apt:
+       upgrade: yes
+       update_cache: yes
+       cache_valid_time: 86400
+   - name: install basic package
+     become: true
+     apt: pkg={{item}} state=present update_cache=yes cache_valid_time=604800
+     with_items:
+       - maven
+       - git
+       - vim
+
+   - name: Install add-apt-repostory
+     become: yes
+     apt: name=software-properties-common state=latest
+
+   - name: Add Oracle Java Repository
+     become: yes
+     apt_repository: repo='ppa:webupd8team/java'
+
+   - name: Accept Java 8 License
+     become: yes
+     debconf: name='oracle-java8-installer' question='shared/accepted-oracle-license-v1-1' value='true' vtype='select'
+
+   - name: Install Oracle Java 8
+     become: yes
+     apt: name={{item}} state=latest
+     with_items:
+       - oracle-java8-installer
+       - ca-certificates
+       - oracle-java8-set-default	
+
