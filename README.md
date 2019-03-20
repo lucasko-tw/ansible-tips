@@ -1,6 +1,25 @@
 # Playbook for Installing Basic Package
 
 
+## Run Playbook
+
+```sh
+vim hosts
+```
+
+the content of **hosts**
+
+```sh
+[webservers]
+192.168.1.100 ansible_ssh_port=22 ansible_ssh_user=ubuntu ansible_ssh_pass=123456789
+```
+
+Run playbook.yml
+
+```sh
+ansible-playbook -i hosts playbook.yml
+```
+
 ## apt-get update 
 ```
 - hosts: webservers
@@ -12,7 +31,6 @@
        update_cache: yes
        cache_valid_time: 86400
 ```
-
 
 ## Install Package
 
