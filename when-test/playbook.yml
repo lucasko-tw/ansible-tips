@@ -1,0 +1,47 @@
+---
+- hosts: webservers
+  become: true
+
+  tasks:    
+     - name: "Vars test"
+       command: "ls -la "
+       register: out
+     - debug: var=out.stdout_lines
+
+     - name: "Check Version"
+       command: "mvn --version"
+       register: out
+     - debug: var=out.stdout
+
+     - name: "Run it when true"
+       command: echo '123'
+       when: "'8.0' in out.stdout"
+
+
+
+
+
+     # Copy a file to the remote server if the hosts file doesn't exist.
+     - stat: path=/etc/hosts
+       register: hosts_file
+     - copy: src=/etc/hosts dest=~/hosts
+       when: hosts_file.stat.exists == true
+
+     - name: "ls ~/"
+       command: "ls -ls ~/ "
+       register: out
+     - debug: var=out.stdout_lines
+ 
+
+    #- name: Create file on local or host
+    #  local_action:  command 'touch 5566'
+
+
+
+
+
+
+
+
+
+    

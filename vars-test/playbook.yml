@@ -3,12 +3,24 @@
   become: true
   vars_files:
     - vars.yml
+  vars:
+    foo: bar
+    foo_list:
+      - one
+      - two
+      - three
 
   pre_tasks:
      - name: "Pre Task"
        command: echo 'Beginning to updating ...'
        register: out
      - debug: var=out.stdout_lines
+
+     - debug: msg="Variable 'foo' is set to {{ foo }}"
+
+     - debug: msg="Variable 'foo_list[1]' is set to {{ foo_list[1] }}"
+
+     - debug: msg="Variable from inventory, 'version' is set to {{ version }}"
 
 
      - name: Update apt cache if needed.
@@ -24,16 +36,14 @@
      - name: "Vars test"
        command: "ls -la {{ download_dir }}"
        register: out
-
      - debug: var=out.stdout_lines
 
 
-
-     - name: Create file
-       command: touch ~/.bash_profile
-     
-     - name: Add an environment variable to the remote user's shell.
-       lineinfile: dest=~/.bash_profile regexp=^MY_ENV= line=MY_ENV=dev
+     - name: "Vars test"
+       command: "env"
+       environment: download_dir
+       register: out
+     - debug: var=out.stdout_lines
 
 
 
