@@ -1,0 +1,40 @@
+---
+- hosts: webservers
+  become: true
+  vars_files:
+    - vars.yml
+
+  pre_tasks:
+     - name: "Pre Task"
+       command: echo 'Beginning to updating ...'
+       register: out
+     - debug: var=out.stdout_lines
+
+
+     - name: Update apt cache if needed.
+       apt: update_cache=yes cache_valid_time=3600
+
+  post_tasks:
+     - name: "Post Task"
+       command: echo 'Done ...'
+       register: out
+     - debug: var=out.stdout_lines
+
+  tasks:    
+     - name: "Vars test"
+       command: "ls -la {{ download_dir }}"
+       register: out
+
+     - debug: var=out.stdout_lines
+
+
+
+     - name: Create file
+       command: touch ~/.bash_profile
+     
+     - name: Add an environment variable to the remote user's shell.
+       lineinfile: dest=~/.bash_profile regexp=^MY_ENV= line=MY_ENV=dev
+
+
+
+
