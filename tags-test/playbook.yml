@@ -1,0 +1,37 @@
+---
+- hosts: webservers
+  become: true
+  tags: deploy
+  
+  
+  tasks:    
+     - name: "Notification"
+       command: echo 'sending notification ...' 
+       tags:
+         - notifications
+       register: out
+     - debug: var=out.stdout_lines
+       tags:
+         - notifications
+
+
+     - name: "Do something"
+       command: echo 'doing something ...'  
+       tags: 
+         - do
+         - echo
+       register: out
+     - debug: var=out.stdout_lines
+       tags:
+         - do
+         - echo
+
+
+     - name: "Installation"
+       command: echo 'installing ...'
+       tags:
+         - install 
+       register: out
+     - debug: var=out.stdout_lines
+       tags:
+         - install
